@@ -1,0 +1,15 @@
+﻿{
+  "DisplaySteps": "步数： ",
+  "DisplayLuck": "明日运气： ",
+  "DisplayIslandWeather": "姜岛后天天气： ",
+  "DisplayWeather": "后天天气： ",
+  "DisplayGift": "邮箱礼物： ",
+  "DisplayDish": "菜肴： ",
+  "DisplaySearch": "搜索： ",
+  "Sunny": "晴天",
+  "Rain": "雨天",
+  "Debris": "微风",
+  "Lightning": "暴风雨",
+  "Festival": "节日",
+  "Snow": "下雪"
+}

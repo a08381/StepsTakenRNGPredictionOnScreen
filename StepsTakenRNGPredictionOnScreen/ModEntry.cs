@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GenericModConfigMenu;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -16,7 +17,7 @@ namespace StepsTakenOnScreen
 
         private ModConfig config;
 
-        private double dailyLuck;
+        private float dailyLuck;
         private int islandWeatherForTomorrow;
         private int weatherForTomorrow;
         private int dishOfTheDay;
@@ -46,13 +47,185 @@ namespace StepsTakenOnScreen
             helper.Events.Input.ButtonReleased += OnButtonReleased;
             helper.Events.Display.RenderedHud += OnRenderedHud;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
-            config = Helper.ReadConfig<ModConfig>();
+            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            config = helper.ReadConfig<ModConfig>();
             islandWeatherValues = config.TargetWeather.Split(new[] { ',' });
             weatherValues = config.TargetWeather.Split(new[] { ',' });
             dishValues = config.TargetDish.Split(new[] { ',' });
             giftValues = config.TargetGifter.Split(new[] { ',' });
         }
-        
+
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            // get Generic Mod Config Menu's API (if it's installed)
+            var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu == null) return;
+
+            // register mod
+            configMenu.Register(
+                mod: ModManifest,
+                reset: () => config = new ModConfig(),
+                save: Save
+            );
+
+            configMenu.AddKeybind(
+                mod: ModManifest,
+                name: () => "Toggle Gui",
+                tooltip: () => "the key to toggle the gui on or off.",
+                getValue: () => config.ToggleGui,
+                setValue: value => config.ToggleGui = value);
+
+            configMenu.AddKeybind(
+                mod: ModManifest,
+                name: () => "Reload Config",
+                tooltip: () => "the key to reload the config file.",
+                getValue: () => config.ReloadConfig,
+                setValue: value => config.ReloadConfig = value);
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Display Step",
+                tooltip: () => "show your steps that will used for seed.",
+                getValue: () => config.DisplaySteps,
+                setValue: value => config.DisplaySteps = value
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Display Luck",
+                tooltip: () => "show your luck that will happen on tomorrow.",
+                getValue: () => config.DisplayLuck,
+                setValue: value => config.DisplayLuck = value
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Display Weather",
+                tooltip: () => "show the weather that will happen on aftermorrow.",
+                getValue: () => config.DisplayWeather,
+                setValue: value => config.DisplayWeather = value
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Display Island Weather",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.DisplayIslandWeather,
+                setValue: value => config.DisplayIslandWeather = value
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Display Gift",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.DisplayGift,
+                setValue: value => config.DisplayGift = value
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Display Dish",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.DisplayDish,
+                setValue: value => config.DisplayDish = value
+            );
+
+            // add some config options
+            configMenu.AddNumberOption(
+                mod: ModManifest,
+                name: () => "Horizontal Offset",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.HorizontalOffset,
+                setValue: value => config.HorizontalOffset = value,
+                min: 0,
+                max: Game1.graphics.PreferredBackBufferWidth,
+                interval: 1
+            );
+
+            // add some config options
+            configMenu.AddNumberOption(
+                mod: ModManifest,
+                name: () => "Vertical Offset",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.VerticalOffset,
+                setValue: value => config.VerticalOffset = value,
+                min: 0,
+                max: Game1.graphics.PreferredBackBufferHeight,
+                interval: 1
+            );
+
+            // add some config options
+            configMenu.AddNumberOption(
+                mod: ModManifest,
+                name: () => "Target Luck",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetLuck,
+                setValue: value => config.TargetLuck = value,
+                min: -1.0f,
+                max: 1.0f
+            );
+
+            // add some config options
+            configMenu.AddTextOption(
+                mod: ModManifest,
+                name: () => "Target Weather",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetWeather,
+                setValue: value => config.TargetWeather = value
+            );
+
+            // add some config options
+            configMenu.AddTextOption(
+                mod: ModManifest,
+                name: () => "Target Island Weather",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetIslandWeather,
+                setValue: value => config.TargetIslandWeather = value
+            );
+
+            // add some config options
+            configMenu.AddTextOption(
+                mod: ModManifest,
+                name: () => "Target Gifter",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetGifter,
+                setValue: value => config.TargetGifter = value
+            );
+
+            // add some config options
+            configMenu.AddTextOption(
+                mod: ModManifest,
+                name: () => "Target Dish",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetDish,
+                setValue: value => config.TargetDish = value
+            );
+
+            // add some config options
+            configMenu.AddNumberOption(
+                mod: ModManifest,
+                name: () => "Target Dish Amount",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetDishAmount,
+                setValue: value => config.TargetDishAmount = value
+            );
+
+            // add some config options
+            configMenu.AddNumberOption(
+                mod: ModManifest,
+                name: () => "Target Steps Limit",
+                tooltip: () => "show the island weather that will happen on aftermorrow.",
+                getValue: () => config.TargetStepsLimit,
+                setValue: value => config.TargetStepsLimit = value
+            );
+        }
+
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             locationsChecked = false;
@@ -64,20 +237,15 @@ namespace StepsTakenOnScreen
             {
                 return;
             }
-            switch (e.Button)
+
+            if (e.Button == config.ReloadConfig)
             {
-                case SButton.F5:
-                    config = Helper.ReadConfig<ModConfig>();
-                    Monitor.Log("Config reloaded", LogLevel.Info);
-                    islandWeatherValues = config.TargetWeather.Split(new[] { ',' });
-                    weatherValues = config.TargetWeather.Split(new[] { ',' });
-                    dishValues = config.TargetDish.Split(new[] { ',' });
-                    giftValues = config.TargetGifter.Split(new[] { ',' });
-                    targetStepsCalculation = 0;
-                    break;
-                case SButton.F3:
-                    Enable = !Enable;
-                    break;
+                Reload();
+            }
+
+            if (e.Button == config.ToggleGui)
+            {
+                Enable = !Enable;
             }
         }
         
@@ -122,8 +290,8 @@ namespace StepsTakenOnScreen
             string str = "";
             if (config.DisplaySteps) str = InsertLine(str, GetStepsTaken());
             if (config.DisplayLuck) str = InsertLine(str, GetLuck());
-            if (config.DisplayIslandWeather) str = InsertLine(str, GetIslandWeather(islandWeatherForTomorrow));
             if (config.DisplayWeather) str = InsertLine(str, GetWeather(weatherForTomorrow));
+            if (config.DisplayIslandWeather) str = InsertLine(str, GetIslandWeather(islandWeatherForTomorrow));
             if (config.DisplayDish) str = InsertLine(str, GetDishOfTheDay());
             if (config.DisplayGift) str = InsertLine(str, GetMailPerson());
 
@@ -136,7 +304,7 @@ namespace StepsTakenOnScreen
                     for (int steps = 0; steps < config.TargetStepsLimit; steps++)
                     {
                         targetStepsCalculation = steps + (int)Game1.stats.StepsTaken;
-                        CalculatePredictions(targetStepsCalculation, out double luck, out int islandWeather, out int weather, out int dish, out int dishAmount, out string person);
+                        CalculatePredictions(targetStepsCalculation, out float luck, out int islandWeather, out int weather, out int dish, out int dishAmount, out string person);
                         if ((config.TargetLuck != -1.0 && !(luck >= config.TargetLuck)) ||
                             (config.TargetIslandWeather != "" &&
                              !islandWeatherValues.Contains(GetWeatherValue(islandWeather))) ||
@@ -166,7 +334,29 @@ namespace StepsTakenOnScreen
             Vector2 vector = new(config.HorizontalOffset, config.VerticalOffset);
             DrawHelper.DrawHoverBox(spriteBatch, text, vector, Game1.viewport.Width);
         }
-        
+
+        private void Reload()
+        {
+            config = Helper.ReadConfig<ModConfig>();
+            Monitor.Log("Config reloaded", LogLevel.Info);
+            islandWeatherValues = config.TargetWeather.Split(new[] { ',' });
+            weatherValues = config.TargetWeather.Split(new[] { ',' });
+            dishValues = config.TargetDish.Split(new[] { ',' });
+            giftValues = config.TargetGifter.Split(new[] { ',' });
+            targetStepsCalculation = 0;
+        }
+
+        private void Save()
+        {
+            Helper.WriteConfig(config);
+            Monitor.Log("Config saved", LogLevel.Info);
+            islandWeatherValues = config.TargetWeather.Split(new[] { ',' });
+            weatherValues = config.TargetWeather.Split(new[] { ',' });
+            dishValues = config.TargetDish.Split(new[] { ',' });
+            giftValues = config.TargetGifter.Split(new[] { ',' });
+            targetStepsCalculation = 0;
+        }
+
         private string GetStepsTaken()
         {
             return Helper.Translation.Get("DisplaySteps") + Game1.stats.stepsTaken;
@@ -252,7 +442,7 @@ namespace StepsTakenOnScreen
                 select item).Count();
         }
         
-        private void CalculatePredictions(int steps, out double dailyLuck, out int islandWeather, out int weather, out int dishOfTheDay, out int dishOfTheDayAmount, out string mailPerson)
+        private void CalculatePredictions(int steps, out float dailyLuck, out int islandWeather, out int weather, out int dishOfTheDay, out int dishOfTheDayAmount, out string mailPerson)
         {
             CheckLocations();
             Random random = new((int)Game1.uniqueIDForThisGame / 100 + (int)(Game1.stats.DaysPlayed * 10U) + 1 + steps);
@@ -281,7 +471,7 @@ namespace StepsTakenOnScreen
                 }
             }
             random.NextDouble();
-            dailyLuck = random.Next(-100, 101) / 1000.0;
+            dailyLuck = random.Next(-100, 101) / 1000.0f;
             islandWeather = (random.NextDouble() < 0.24) ? 1 : 0;
             if (Game1.weatherForTomorrow == 2)
             {

@@ -1,2 +1,2 @@
 # StepsTakenRNGPredictionOnScreen
-Show Steps Taken, and RNG predictions for the next day on screen
+Show Steps Taken, and RNG predictions for the next day on screen in Stardew Valley

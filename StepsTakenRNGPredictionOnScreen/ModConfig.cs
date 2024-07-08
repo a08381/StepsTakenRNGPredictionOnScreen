@@ -13,9 +13,9 @@ namespace StepsTakenOnScreen
         
         public bool DisplayLuck { get; set; } = true;
 
-        public bool DisplayWeather { get; set; } = true;
+        // public bool DisplayWeather { get; set; } = true;
 
-        public bool DisplayIslandWeather { get; set; } = true;
+        // public bool DisplayIslandWeather { get; set; } = true;
         
         public bool DisplayGift { get; set; }
         
@@ -27,9 +27,9 @@ namespace StepsTakenOnScreen
         
         public float TargetLuck { get; set; } = -1.0f;
 
-        public string TargetWeather { get; set; } = "";
+        // public string TargetWeather { get; set; } = "";
 
-        public string TargetIslandWeather { get; set; } = "";
+        // public string TargetIslandWeather { get; set; } = "";
         
         public string TargetGifter { get; set; } = "";
         

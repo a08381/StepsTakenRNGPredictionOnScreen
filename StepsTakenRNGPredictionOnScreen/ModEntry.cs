@@ -8,6 +8,7 @@ using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.GameData;
 using StardewValley.Objects;
+using StardewValley.TokenizableStrings;
 using Object = StardewValley.Object;
 
 namespace StepsTakenOnScreen
@@ -411,12 +412,17 @@ namespace StepsTakenOnScreen
         
         private string GetDishOfTheDayValue(string dish)
         {
-            return Game1.objectData[dish].DisplayName;
+            return TokenParser.ParseText(Game1.objectData[dish].DisplayName);
         }
         
         private string GetMailPerson()
         {
-            return Helper.Translation.Get("DisplayGift") + mailPerson;
+            string displayName = "";
+            if (mailPerson != "")
+            {
+                displayName = TokenParser.ParseText(Game1.getCharacterFromName(mailPerson).GetTokenizedDisplayName());
+            }
+            return Helper.Translation.Get("DisplayGift") + displayName;
         }
 
         private bool IsCorrectItem(Object item, GameLocation location, int minutesUntilMorning)
